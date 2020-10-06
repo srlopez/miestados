@@ -9,3 +9,7 @@ Estudio de estados en Flutter
   * Un estado para almacenar las instancias del modelo
   * Un widget para el modelo
   * Distintos setState()
+
+- v1.0: Versión con Future
+  * El nombre se obtine de un futuro _lejano_
+  
