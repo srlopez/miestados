@@ -20,10 +20,11 @@ Estudio de estados en Flutter
 
 
 
-
+```
 git log --oneline
 
 git checkout fa7e26c; # para ir al contador original
 git checkout 0a622fc; # multiples contadores
 git checkout 86b3d22; # Con future
 git checkout ef4a24f; # Con strems
+```
