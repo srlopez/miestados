@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'dart:async';
 
 void main() {
   runApp(MyApp());
@@ -31,22 +31,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var _rnd = Random();
+  @override
+  void initState() {
+    _streamController = StreamController();
+    _stream = _streamController.stream;
+  }
+
+  @override
+  void dispose() {
+    _streamController.close();
+  }
 
   // State
   var _list = <Data>[];
 
   void _addItem() {
-    int sg = _rnd.nextInt(7);
-    _list.add(Data(_fnominar(sg), sg));
-    setState(() {});
+    // Enviamos una instancia del modelo al stream
+    _streamController.sink.add(Data(_nominar(), 0));
+    //setState(() {});
   }
-
-  // El nombre 'future' lo obtenemos tras los segundos indicados
-  // asignamos los segundos de espera al valor para  conocer lo que hemos
-  // de esperar a ver el nombre
-  Future<String> _fnominar(int sg) =>
-      Future.delayed(Duration(seconds: sg), _nominar);
 
   // Un ejemplo de un closure
   // cada vez que se invoca devuelve un valor en ciclo de la lista de valores
@@ -66,6 +69,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var _data = StreamBuilder<Data>(
+        stream: _stream,
+        builder: (_, AsyncSnapshot<Data> snapshot) {
+          print(snapshot.data?.name);
+          if (snapshot.data == null) return Text('Todavía nada');
+          _list.add(snapshot.data);
+          return Column(
+            children: [
+              for (var item in _list) ...[DataWidget(item: item), Divider()]
+            ],
+          );
+        });
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -75,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 30),
-            for (var item in _list) ...[DataWidget(item: item), Divider()],
+            _data,
           ],
         ),
       ),
@@ -108,44 +124,34 @@ class _DataWidgetState extends State<DataWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // recubrimos el Text con Un Future
-        // Y mostramos los que nos indique el snapshot
-        FutureBuilder(
-          future: widget.item.name,
-          builder: (_, AsyncSnapshot<String> snapshot) {
-            var txt = (snapshot.hasData)
-                ? '${snapshot.data}'
-                : (snapshot.hasError)
-                    ? 'Error: ${snapshot.error}'
-                    : 'Sin name...';
-            return Text(txt, style: TextStyle(fontStyle: FontStyle.italic));
-          },
+    return Column(children: [
+      Text(widget.item.name, style: TextStyle(fontStyle: FontStyle.italic)),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        IconButton(
+            onPressed: () => _incrementCounter(1),
+            icon: Icon(Icons.add),
+            color: Colors.green),
+        Text(
+          '${widget.item.value}',
+          style: Theme.of(context).textTheme.headline3,
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          IconButton(
-              onPressed: () => _incrementCounter(1),
-              icon: Icon(Icons.add),
-              color: Colors.green),
-          Text(
-            '${widget.item.value}',
-            style: Theme.of(context).textTheme.headline3,
-          ),
-          IconButton(
-              onPressed: () => _incrementCounter(-1),
-              icon: Icon(Icons.remove),
-              color: Colors.red),
-        ]),
-      ],
-    );
+        IconButton(
+            onPressed: () => _incrementCounter(-1),
+            icon: Icon(Icons.remove),
+            color: Colors.red),
+      ]),
+    ]);
   }
 }
 
 // ================================================================
 // El modelo
 class Data {
-  Future<String> name;
+  String name;
   int value;
   Data(this.name, this.value);
 }
+
+// Y el stream accesibles desde todos los widgets
+StreamController<Data> _streamController;
+Stream<Data> _stream;

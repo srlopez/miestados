@@ -12,4 +12,8 @@ Estudio de estados en Flutter
 
 - v1.0: Versión con Future
   * El nombre se obtine de un futuro _lejano_
+  * El modelo cambia una de sus propiedades a Future
   
+- v2.0: Versión con Strems
+  * se introduce dart:async
+  * Cada instancia del modelo se añade al stream
