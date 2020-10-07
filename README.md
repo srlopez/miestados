@@ -14,7 +14,7 @@ Estudio de estados en Flutter
   * El nombre se obtine de un futuro _lejano_
   * El modelo cambia una de sus propiedades a Future
   
-- v2.0: Versión con Strems
+- v2.0: Versión con Streams
   * Se introduce dart:async
   * Cada instancia del modelo se añade al stream
   
@@ -31,5 +31,6 @@ git log --oneline
 git checkout fa7e26c; # para ir al contador original
 git checkout 0a622fc; # multiples contadores
 git checkout 86b3d22; # Con future
-git checkout ef4a24f; # Con strems
+git checkout ef4a24f; # Con stremas
+git checkout 76f5f7d; # Streams/Future/API
 ```
