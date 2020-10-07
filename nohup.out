@@ -9,3 +9,16 @@ qemu-system-x86_64: warning: TSC frequency mismatch between VM (2303936 kHz) and
 qemu-system-x86_64: warning: TSC frequency mismatch between VM (2303936 kHz) and host (2303998 kHz), and TSC scaling unavailable
 qemu-system-x86_64: warning: TSC frequency mismatch between VM (2303936 kHz) and host (2303998 kHz), and TSC scaling unavailable
 qemu-system-x86_64: warning: TSC frequency mismatch between VM (2303936 kHz) and host (2303998 kHz), and TSC scaling unavailable
+emulator: Saving state on exit with session uptime 9746920 ms
+emulator: ERROR: AdbHostServer.cpp:102: Unable to connect to adb daemon on port: 5037
+Your emulator is out of date, please update by launching Android Studio:
+ - Start Android Studio
+ - Select menu "Tools > Android > SDK Manager"
+ - Click "SDK Tools" tab
+ - Check "Android Emulator" checkbox
+ - Click "OK"
+
+qemu-system-x86_64: warning: TSC frequency mismatch between VM (2303936 kHz) and host (2304001 kHz), and TSC scaling unavailable
+qemu-system-x86_64: warning: TSC frequency mismatch between VM (2303936 kHz) and host (2304001 kHz), and TSC scaling unavailable
+qemu-system-x86_64: warning: TSC frequency mismatch between VM (2303936 kHz) and host (2304001 kHz), and TSC scaling unavailable
+qemu-system-x86_64: warning: TSC frequency mismatch between VM (2303936 kHz) and host (2304001 kHz), and TSC scaling unavailable

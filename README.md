@@ -15,8 +15,13 @@ Estudio de estados en Flutter
   * El modelo cambia una de sus propiedades a Future
   
 - v2.0: Versión con Strems
-  * se introduce dart:async
+  * Se introduce dart:async
   * Cada instancia del modelo se añade al stream
+  
+- v3.0: Streams Future con API
+  * Utilizamos Streams como en V2.0
+  * Utilizamos Future como en V1.0
+  * El nombre lo obtenemos de una public API, y mantenemos el retardo.
 
 
 

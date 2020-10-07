@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:math';
 import 'dart:async';
 
 void main() {
@@ -31,6 +35,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var _rnd = Random();
+
   @override
   void initState() {
     _streamController = StreamController();
@@ -47,25 +53,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addItem() {
     // Enviamos una instancia del modelo al stream
-    _streamController.sink.add(Data(_nominar(), 0));
+    int sg = _rnd.nextInt(7);
+    _streamController.sink.add(Data(_fnominar(sg), sg));
     //setState(() {});
   }
 
-  // Un ejemplo de un closure
-  // cada vez que se invoca devuelve un valor en ciclo de la lista de valores
-  var _nominar = () {
-    var i = 0;
-    var names = [
-      'lunes',
-      'martes',
-      'miercoles',
-      'jueves',
-      'viernes',
-      // 'sabado',
-      // 'domingo'
-    ];
-    return () => names[i++ % names.length];
-  }();
+  // El nombre 'future' lo obtenemos tras los segundos indicados
+  // asignamos los segundos de espera al valor para  conocer lo que hemos
+  // de esperar a ver el nombre
+  // Mantenemos los segundos de delay para simular un posible retardo
+  // pero podíamos solicitar directamente la Request al API
+
+  Future<String> _fnominar(int sg) =>
+      Future.delayed(Duration(seconds: sg), _fetchAlbum);
+
+  Future<String> _fetchAlbum() async {
+    int id = 1 + _rnd.nextInt(9);
+    final response =
+        await http.get('https://jsonplaceholder.typicode.com/users/$id');
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)["name"];
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +137,19 @@ class _DataWidgetState extends State<DataWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Text(widget.item.name, style: TextStyle(fontStyle: FontStyle.italic)),
+      // recubrimos el Text con Un Future
+      // Y mostramos los que nos indique el snapshot
+      FutureBuilder(
+        future: widget.item.name,
+        builder: (_, AsyncSnapshot<String> snapshot) {
+          var txt = (snapshot.hasData)
+              ? '${snapshot.data}'
+              : (snapshot.hasError)
+                  ? 'Error: ${snapshot.error}'
+                  : 'Sin name...';
+          return Text(txt, style: TextStyle(fontStyle: FontStyle.italic));
+        },
+      ),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         IconButton(
             onPressed: () => _incrementCounter(1),
@@ -147,7 +171,7 @@ class _DataWidgetState extends State<DataWidget> {
 // ================================================================
 // El modelo
 class Data {
-  String name;
+  Future<String> name;
   int value;
   Data(this.name, this.value);
 }
